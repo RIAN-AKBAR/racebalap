@@ -29,7 +29,7 @@ export default async function handler(req, res) {
         }
 
         // POST - Generate otomatis (semua kombinasi)
-        if (req.method === 'POST' && req.url?.includes('generate')) {
+        if (req.method === 'POST' && req.url === '/api/matches/generate') {
             // Ambil semua pembalap
             const racers = await sql`SELECT id FROM racers ORDER BY id`;
             const racerIds = racers.rows.map(r => r.id);
