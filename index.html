@@ -1,0 +1,306 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>🏁 Turnamen Balap - Official</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            background: linear-gradient(135deg, #0a0f1e 0%, #0b1a2a 100%);
+            font-family: 'Segoe UI', 'Poppins', system-ui, sans-serif;
+            padding: 20px;
+            min-height: 100vh;
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+
+        /* Header */
+        .header {
+            text-align: center;
+            margin-bottom: 40px;
+        }
+
+        .logo {
+            font-size: 4rem;
+            margin-bottom: 10px;
+        }
+
+        h1 {
+            font-size: 2.5rem;
+            background: linear-gradient(135deg, #ffd966, #ff9933, #e32222);
+            -webkit-background-clip: text;
+            background-clip: text;
+            color: transparent;
+        }
+
+        .sub {
+            color: #8ab3cf;
+            background: rgba(0,0,0,0.5);
+            display: inline-block;
+            padding: 5px 20px;
+            border-radius: 40px;
+            margin-top: 10px;
+        }
+
+        .admin-link {
+            position: fixed;
+            bottom: 20px;
+            right: 20px;
+            background: #1e2a32;
+            padding: 10px 20px;
+            border-radius: 40px;
+            color: #ffaa66;
+            text-decoration: none;
+            font-size: 0.8rem;
+            border: 1px solid #ffaa6655;
+        }
+
+        /* Kartu */
+        .card {
+            background: rgba(10, 20, 28, 0.75);
+            backdrop-filter: blur(8px);
+            border-radius: 28px;
+            border: 1px solid rgba(255, 215, 100, 0.3);
+            padding: 25px;
+            margin-bottom: 25px;
+        }
+
+        .card h2 {
+            color: #ffcc44;
+            border-left: 6px solid #e32222;
+            padding-left: 16px;
+            margin-bottom: 20px;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        /* Grid Pembalap */
+        .racers-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+            gap: 12px;
+        }
+
+        .racer-card {
+            background: #0f1a1f;
+            padding: 15px;
+            border-radius: 20px;
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            border-left: 4px solid #ffaa33;
+        }
+
+        .racer-number {
+            background: #ff5533;
+            width: 40px;
+            height: 40px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            border-radius: 50%;
+            font-weight: bold;
+            font-size: 1.2rem;
+        }
+
+        .racer-name {
+            font-size: 1.1rem;
+            font-weight: bold;
+        }
+
+        /* Daftar Race */
+        .matches-list {
+            display: flex;
+            flex-direction: column;
+            gap: 12px;
+        }
+
+        .match-card {
+            background: #0f1a1f;
+            border-radius: 20px;
+            padding: 15px 20px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            flex-wrap: wrap;
+            gap: 10px;
+        }
+
+        .match-racers {
+            display: flex;
+            align-items: center;
+            gap: 20px;
+            flex: 1;
+        }
+
+.racer {
+            font-weight: bold;
+            font-size: 1.1rem;
+        }
+
+        .vs {
+            color: #ff8844;
+            font-weight: bold;
+            font-size: 1rem;
+        }
+
+        .race-status {
+            background: #2a4a3a;
+            padding: 5px 12px;
+            border-radius: 40px;
+            font-size: 0.8rem;
+        }
+
+        .empty-message {
+            text-align: center;
+            padding: 40px;
+            color: #aaa;
+        }
+
+        footer {
+            text-align: center;
+            margin-top: 40px;
+            color: #5b7c8c;
+            font-size: 0.8rem;
+        }
+
+        .loading {
+            text-align: center;
+            padding: 40px;
+            color: #ffaa66;
+        }
+
+        @media (max-width: 700px) {
+            .match-card {
+                flex-direction: column;
+                text-align: center;
+            }
+            h1 {
+                font-size: 1.8rem;
+            }
+        }
+    </style>
+</head>
+<body>
+<div class="container">
+    <div class="header">
+        <div class="logo">🏁🏎️</div>
+        <h1>RACE TOURNAMENT</h1>
+        <div class="sub">🔥 Official Race Schedule • 2025 🔥</div>
+    </div>
+
+    <!-- Daftar Pembalap -->
+    <div class="card">
+        <h2>🏎️ Daftar Pembalap</h2>
+        <div id="racersContainer" class="racers-grid">
+            <div class="loading">Memuat data pembalap...</div>
+        </div>
+    </div>
+
+    <!-- Daftar Pertandingan -->
+    <div class="card">
+        <h2>🏁 Jadwal Race</h2>
+        <div id="matchesContainer" class="matches-list">
+            <div class="loading">Memuat jadwal race...</div>
+        </div>
+    </div>
+
+    <footer>
+        <p>© Race Tournament 2025 | Official Race Event</p>
+    </footer>
+
+    <a href="admin.html" class="admin-link">🔐 Admin Panel</a>
+</div>
+
+<script>
+    // API Base URL (otomatis menyesuaikan dengan domain)
+    const API_BASE = window.location.origin;
+
+    // Ambil data pembalap
+    async function loadRacers() {
+        try {
+            const response = await fetch(`${API_BASE}/api/racers`);
+            if (!response.ok) throw new Error('Gagal load pembalap');
+            const racers = await response.json();
+            
+            const container = document.getElementById('racersContainer');
+            if (racers.length === 0) {
+                container.innerHTML = '<div class="empty-message">🏁 Belum ada pembalap terdaftar</div>';
+                return;
+            }
+            
+            container.innerHTML = racers.map((racer, index) => `
+                <div class="racer-card">
+                    <div class="racer-number">${index + 1}</div>
+                    <div class="racer-name">${escapeHtml(racer.name)}</div>
+                </div>
+            `).join('');
+        } catch (error) {
+            console.error('Error:', error);
+            document.getElementById('racersContainer').innerHTML = '<div class="empty-message">❌ Gagal memuat data</div>';
+        }
+    }
+
+    // Ambil data pertandingan
+    async function loadMatches() {
+        try {
+            const response = await fetch(`${API_BASE}/api/matches`);
+            if (!response.ok) throw new Error('Gagal load matches');
+            const matches = await response.json();
+            
+            const container = document.getElementById('matchesContainer');
+            if (matches.length === 0) {
+                container.innerHTML = '<div class="empty-message">🏁 Belum ada jadwal race yang diumumkan</div>';
+                return;
+            }
+            
+            container.innerHTML = matches.map(match => `
+                <div class="match-card">
+                    <div class="match-racers">
+                        <span class="racer">🏎️ ${escapeHtml(match.racer1_name)}</span>
+                        <span class="vs">VS</span>
+                        <span class="racer">🏎️ ${escapeHtml(match.racer2_name)}</span>
+                    </div>
+                    <div class="race-status">
+                        ${match.winner ? `🏆 Winner: ${escapeHtml(match.winner)}` : '⏳ Belum dimulai'}
+                    </div>
+                </div>
+            `).join('');
+        } catch (error) {
+            console.error('Error:', error);
+            document.getElementById('matchesContainer').innerHTML = '<div class="empty-message">❌ Gagal memuat jadwal</div>';
+        }
+    }
+
+    function escapeHtml(str) {
+        if (!str) return '';
+        return str.replace(/[&<>]/g, function(m) {
+            if (m === '&') return '&amp;';
+            if (m === '<') return '&lt;';
+            if (m === '>') return '&gt;';
+            return m;
+        });
+    }
+
+    // Load semua data
+    loadRacers();
+    loadMatches();
+
+    // Refresh setiap 30 detik (update otomatis jika admin mengubah)
+    setInterval(() => {
+        loadRacers();
+        loadMatches();
+    }, 30000);
+</script>
+</body>
+</html>
