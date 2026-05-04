@@ -1,10 +1,13 @@
 import { sql } from '@vercel/postgres';
 
 export default async function handler(req, res) {
+    // CORS
+    res.setHeader('Access-Control-Allow-Origin', '*');
+
     // Hanya bisa dijalankan dengan secret key untuk keamanan
     const { secret } = req.query;
     if (secret !== 'YOUR_SECRET_KEY_HERE') {
-        return res.status(401).json({ error: 'Unauthorized' });
+        return res.status(401).json({ error: 'Unauthorized - Gunakan ?secret=YOUR_SECRET_KEY_HERE' });
     }
 
     try {
@@ -28,7 +31,10 @@ export default async function handler(req, res) {
             )
         `;
 
-        return res.status(200).json({ message: 'Database berhasil diinisialisasi!' });
+        return res.status(200).json({ 
+            message: 'Database berhasil diinisialisasi!',
+            tables: ['racers', 'matches']
+        });
     } catch (error) {
         console.error('Init DB Error:', error);
         return res.status(500).json({ error: error.message });
