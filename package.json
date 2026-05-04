@@ -1,0 +1,7 @@
+{
+    "name": "race-tournament",
+    "version": "1.0.0",
+    "dependencies": {
+        "@vercel/postgres": "^0.5.0"
+    }
+}
